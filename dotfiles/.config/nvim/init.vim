@@ -37,6 +37,7 @@ augroup filetype_custom
   autocmd FileType scss setlocal iskeyword+=@-@
   " keywordprg
   autocmd FileType vim setlocal keywordprg=:help
+  autocmd FileType markdown setlocal keywordprg=:DefEng
   " nofoldenable nolist
   autocmd FileType gitcommit,checkhealth setlocal nofoldenable nolist
   " window opening
@@ -50,6 +51,7 @@ augroup miscellaneous_custom
   autocmd BufWritePre * TrimWhitespace
   autocmd TextYankPost * silent! lua vim.highlight.on_yank {higroup="IncSearch", timeout=150}
   autocmd VimEnter * call packager#setup(function('s:packager_init'), {'window_cmd': 'edit'})
+  autocmd VimResized * ResizeAllTabs
   autocmd InsertEnter * setlocal listchars=tab:>\ ,lead:\ ,nbsp:+
   autocmd InsertLeave * setlocal listchars=tab:>\ ,lead:\ ,nbsp:+,trail:-
 augroup end
@@ -79,16 +81,18 @@ function! s:packager_init(p) abort
   " Git
   call a:p.add('https://github.com/tpope/vim-fugitive')
   call a:p.add('https://github.com/lewis6991/gitsigns.nvim')
-  " Miscellaneous
+  " My Plugins
+  call a:p.add('https://github.com/pappasam/nvim-repl')
   call a:p.add('https://github.com/pappasam/papercolor-theme-slim')
+  call a:p.add('https://github.com/pappasam/vim-filetype-formatter')
+  call a:p.add('https://github.com/pappasam/vim-keywordprg-commands')
+  " Miscellaneous
   call a:p.add('https://github.com/sotte/presenting.nvim.git')
   call a:p.add('https://github.com/lukas-reineke/indent-blankline.nvim.git')
   call a:p.add('https://github.com/HiPhish/jinja.vim')
   call a:p.add('https://github.com/NvChad/nvim-colorizer.lua')
   call a:p.add('https://github.com/fidian/hexmode')
   call a:p.add('https://github.com/iamcco/markdown-preview.nvim', {'do': 'cd app & yarn install'})
-  call a:p.add('https://github.com/pappasam/nvim-repl')
-  call a:p.add('https://github.com/pappasam/vim-filetype-formatter')
   call a:p.add('https://github.com/windwp/nvim-autopairs')
   call a:p.add('https://github.com/machakann/vim-sandwich')
   call a:p.add('https://github.com/HiPhish/info.vim')
@@ -150,6 +154,7 @@ let g:loaded_netrwPlugin = 1
 let g:hexmode_patterns = '*.bin,*.exe,*.dat,*.o'
 let g:hexmode_xxd_options = '-g 2'
 " https://github.com/pappasam/vim-filetype-formatter
+let g:vim_filetype_formatter_ft_maps = {'yaml.githubactions': 'yaml'}
 packadd vim-filetype-formatter
 let g:vim_filetype_formatter_commands['python'] = g:vim_filetype_formatter_builtins['ruff']
 " https://github.com/pappasam/nvim-repl
@@ -257,7 +262,13 @@ command! Gm Git commit
 command! Gmv Git commit --verbose
 command! Gma Git add . | Git commit
 command! Gmav Git add . | Git commit --verbose
-command! BackgroundToggle !togglebackground
+
+command! ResizeAllTabs call s:resize_all_tabs()
+function! s:resize_all_tabs()
+  let current_tab = tabpagenr()
+  tabdo wincmd =
+  execute 'tabnext ' .. current_tab
+endfunction
 
 command! ConcealToggle call s:toggle_conceal()
 function! s:toggle_conceal()
@@ -291,6 +302,7 @@ function! s:resize_window_width()
 endfunction
 
 command! F call s:focuswriting()
+command! Focus call s:focuswriting()
 function! s:focuswriting()
   if exists('t:focuswriting')
     tabclose
