@@ -6,9 +6,16 @@
         "source": "github",
         "repo": "astral-sh/claude-code-plugins"
       }
+    },
+    "tavily": {
+      "source": {
+        "source": "github",
+        "repo": "tavily-ai/skills"
+      }
     }
   },
   "enabledPlugins": {
-    "astral@astral-sh": true
+    "astral@astral-sh": true,
+    "tavily@skills": true
   }
 }
