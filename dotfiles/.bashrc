@@ -27,6 +27,7 @@ export PYTHON_CONFIGURE_OPTS='--enable-shared'                   # For installin
 export R_EXTRA_CONFIGURE_OPTIONS='--enable-R-shlib --with-cairo' # For installing R through ASDF, need shared libraries in Python and R
 export SAVEHIST=5000                                             # how many lines of history to save to disk
 export VIRTUAL_ENV_DISABLE_PROMPT=1                              # disable python venv prompt so I can configure myself
+export ENABLE_LSP_TOOL=1                                         # https://github.com/anthropics/claude-code/issues/15619
 
 # shellcheck source=/dev/null
 function include() { [[ -f "$1" ]] && source "$1"; }
